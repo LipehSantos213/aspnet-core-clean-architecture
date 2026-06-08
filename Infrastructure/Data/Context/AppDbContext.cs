@@ -20,6 +20,7 @@ namespace api_csharp.Infrastructure.Data.Context
             base.OnModelCreating(modelBuilder);
 
             // Isso aqui diz pro EF Core ler as configurações de tabelas adicionais se você criar
+            // Esta linha varre o projeto procurando classes que herdam de IEntityTypeConfiguration
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
     }
