@@ -7,11 +7,11 @@ namespace api_csharp.Domain.Interfaces
     {
         Task<TodoTask> Create(TodoTask task);
 
-        Task<List<TodoTask>> GetAll(int userId);
+        Task<List<TodoTask>?> GetAll(int userId);
 
-        Task<TodoTask> Update(int userId,TodoTask task);
+        Task<TodoTask> Update(TodoTask task);
 
-        Task<TodoTask> Get(int userId,int id);
+        Task<TodoTask?> Get(int userId,int id);
 
         Task Remove(int userId, int id);
     }
