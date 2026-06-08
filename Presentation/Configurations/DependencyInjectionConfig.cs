@@ -1,5 +1,6 @@
 ﻿using api_csharp.Application.UseCases.Users;
 using api_csharp.Application.UseCases.TodoTasks;
+using api_csharp.Application.Services;
 
 namespace api_csharp.Presentation.Configurations
 {
@@ -7,6 +8,9 @@ namespace api_csharp.Presentation.Configurations
     {
         public static IServiceCollection AddDependencyResolvers(this IServiceCollection services)
         {
+            // Injeção dos Serviços de Usuario
+            services.AddScoped<UserService>();
+
             // Injeção dos Use Cases de Usuário
             services.AddScoped<CreateUserUseCase>();
             services.AddScoped<LoginUserUseCase>();
