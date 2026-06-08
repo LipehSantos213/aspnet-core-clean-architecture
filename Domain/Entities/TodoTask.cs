@@ -14,16 +14,29 @@ namespace api_csharp.Domain.Entities
         
         public bool Active { get; private set; }
 
-        public TodoTask(string title, string description, int id = 0, int userId = 0)
+        public User User { get; private set; } = null!;
+
+        // Construtor privado para o EF Core
+        private TodoTask() { }
+
+        public TodoTask(
+            string title,
+            string description,
+            int id = default,
+            int userId = default,
+            bool active = true)
         {
             Validate(title, description);
             Id = id;
             UserId = userId;
             Title = title;
             Description = description;
+            Active = active;
         }
 
-        private void Validate(string title, string descripion)
+       
+
+        private void Validate(string title, string description)
         {
             if(title.Length <= 5)
             {
@@ -33,31 +46,30 @@ namespace api_csharp.Domain.Entities
                 throw new DomainException("Titulo muito longa !");
             }
 
-            if(descripion.Length >= 301)
+            if(description.Length >= 301)
             {
                 throw new DomainException("Descrição muito longa");
-            }else if(descripion.Length<=5)
+            }else if(description.Length<=5)
             {
                 throw new DomainException("Descrição muito curta");
             }
         }
     
-        public void Disable()
+        public void UpdateTodoTask(string title, string description)
         {
-            Active = false;
+            Title = title ?? Title;
+            Description = description ?? Description;
         }
-
-        public void Activate()
+        
+        public void UpdateStatus(bool active)
         {
-            Active = true;
-        }
-    
-        public void Update(string title, string description)
-        {
-            Validate(title, description);
+            if(Active == active)
+            {
+                string isStatus = active ? "ativado" : "desativado";
+                throw new DomainException($"A tarefa já é {isStatus}");
+            }
 
-            Title = title;
-            Description = description;
+            Active = active;
         }
     }
 }   

@@ -1,7 +1,5 @@
-﻿using api_csharp.Application.ValueObjects;
-using api_csharp.Domain.Exception;
+﻿using api_csharp.Domain.Exception;
 using api_csharp.Domain.ValueObjects;
-using System.Net.Mail;
 
 namespace api_csharp.Domain.Entities
 {
@@ -13,6 +11,12 @@ namespace api_csharp.Domain.Entities
 
         public Email Email { get; private set; }
 
+        public List<TodoTask> Tasks { get; } = new();
+
+        // Construtor privado para o EF Core
+        private User() { }
+
+        // Construtor utilizado na aplicação
         public User(string name, string email, int id=0)
         {
             ValidateName(name);
