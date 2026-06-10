@@ -3,7 +3,10 @@ using api_csharp.Domain.Interfaces;
 using api_csharp.Infrastructure.Data.Context;
 using api_csharp.Infrastructure.Repositories;
 using api_csharp.Presentation.Configurations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,31 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Sempre que um UseCase pedir IUserRepository, o ASP.NET vai instanciar o UserRepository da Infra
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITodoTaskRepository, TodoTaskRepository>();
+
+var secretKey = builder.Configuration["JwtSettings:SecretKey"]!;
+var key = Encoding.ASCII.GetBytes(secretKey);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false; // Em desenvolvimento pode ser false
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        ValidateLifetime = true, // Valida se o token já expirou
+        ClockSkew = TimeSpan.Zero // Remove o tempo de tolerância padrão de 5 min para expiração exata
+    };
+});
 
 // Add services to the container.
 
@@ -38,6 +66,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
