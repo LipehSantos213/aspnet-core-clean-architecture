@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace api_csharp.Migrations
 {
     /// <inheritdoc />
-    public partial class InitTableDataBase : Migration
+    public partial class InitDataBaseTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,8 +34,7 @@ namespace api_csharp.Migrations
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     Title = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    Active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    UserId1 = table.Column<int>(type: "integer", nullable: false)
+                    Active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -46,23 +45,12 @@ namespace api_csharp.Migrations
                         principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TodoTask_users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_TodoTask_UserId",
                 table: "TodoTask",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TodoTask_UserId1",
-                table: "TodoTask",
-                column: "UserId1");
         }
 
         /// <inheritdoc />

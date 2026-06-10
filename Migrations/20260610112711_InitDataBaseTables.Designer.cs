@@ -11,8 +11,8 @@ using api_csharp.Infrastructure.Data.Context;
 namespace api_csharp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260606142547_InitTableDataBase")]
-    partial class InitTableDataBase
+    [Migration("20260610112711_InitDataBaseTables")]
+    partial class InitDataBaseTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,14 +50,9 @@ namespace api_csharp.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("TodoTask", (string)null);
                 });
@@ -82,15 +77,9 @@ namespace api_csharp.Migrations
 
             modelBuilder.Entity("api_csharp.Domain.Entities.TodoTask", b =>
                 {
-                    b.HasOne("api_csharp.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("api_csharp.Domain.Entities.User", "User")
                         .WithMany("Tasks")
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
