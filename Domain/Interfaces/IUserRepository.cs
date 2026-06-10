@@ -1,4 +1,5 @@
 ﻿using api_csharp.Domain.Entities;
+using System.Runtime.CompilerServices;
 
 namespace api_csharp.Domain.Interfaces
 {
@@ -13,5 +14,7 @@ namespace api_csharp.Domain.Interfaces
         Task<User?> Get(int id);
 
         Task<User?> GetUserByEmail(string email);
+
+        Task<string> Remove(User user);
     }
 }

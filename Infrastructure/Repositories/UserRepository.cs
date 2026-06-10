@@ -50,5 +50,12 @@ namespace api_csharp.Infrastructure.Repositories
 
             return user;
         }
+
+        public async Task<string> Remove(User user)
+        {
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return "Usuario removido !";
+        }
     }
 }
