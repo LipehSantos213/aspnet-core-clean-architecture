@@ -10,28 +10,36 @@ namespace api_csharp.Application.UseCases.Users
     {
         private readonly IUserRepository _repository;
         private readonly UserService _userService;
+        private readonly TokenService _tokenService;
 
         public LoginUserUseCase(
             IUserRepository repository,
-            UserService userService)
+            UserService userService,
+            TokenService tokenService)
         {
             _repository = repository;
             _userService = userService;
+            _tokenService = tokenService;
         }
 
         public  async Task<UserResponseDTO> Execute(UserLoginDTO dto)
         {
             var data = new User(dto.Name, dto.Email);
 
-            User? user = await _repository.Login(data);
+            User user = await _repository.Login(data) ?? 
+                throw new DomainException("Usuario não encontrado !");
 
-            return user == null? 
-                throw new DomainException("Usuario não encontrado !"):
-                new UserResponseDTO(
+            var accessToken = _tokenService.GenerateAccessToken(user, "USER");
+
+            var response = new UserResponseDTO(
                     user.Id,
                     user.Name,
                     user.Email
                 );
+
+            response.AddToken(accessToken);
+
+            return response;
         }
     }
 }

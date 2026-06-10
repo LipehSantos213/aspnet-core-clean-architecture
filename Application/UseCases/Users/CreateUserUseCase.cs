@@ -28,11 +28,13 @@ namespace api_csharp.Application.UseCases.Users
 
             User user =  await _repository.Create(data);
 
-            return new UserResponseDTO(
+            var response = new UserResponseDTO(
                 user.Id,
                 user.Name,
                 user.Email
              );
+
+            return response;
         }
     }
 }
