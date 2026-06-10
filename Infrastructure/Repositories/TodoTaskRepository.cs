@@ -47,11 +47,10 @@ namespace api_csharp.Infrastructure.Repositories
             return task;
         }
     
-        public async Task Remove(int userId, int id)
+        public async Task Remove(TodoTask todoTask)
         {
-            await _context.TodoTasks
-                .Where(i => i.UserId == userId && i.Id == id)
-                .ExecuteDeleteAsync();
+            _context.TodoTasks.Remove(todoTask);
+            await _context.SaveChangesAsync();
         }
     }
 }

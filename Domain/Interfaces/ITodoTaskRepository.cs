@@ -13,6 +13,6 @@ namespace api_csharp.Domain.Interfaces
 
         Task<TodoTask?> Get(int userId,int id);
 
-        Task Remove(int userId, int id);
+        Task Remove(TodoTask todoTask);
     }
 }
