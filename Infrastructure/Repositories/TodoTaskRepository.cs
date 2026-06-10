@@ -16,7 +16,7 @@ namespace api_csharp.Infrastructure.Repositories
 
         public async Task<TodoTask> Create(TodoTask task)
         {
-            _context.TodoTasks.Where(i => i.UserId == task.UserId).Append(task);
+            await _context.TodoTasks.AddAsync(task);
             await _context.SaveChangesAsync();
             return task;
         }
