@@ -23,7 +23,8 @@ namespace api_csharp.Application.UseCases.TodoTasks
         {
             await _userService.AsyncGetUser(userId);
 
-            List<TodoTask>? todoTasks = await _repository.GetAll(userId);
+            List<TodoTask>? todoTasks = await _repository.GetAll(userId) ??
+                throw new DomainException("Nenhuma tarefa encontrada !");
 
             if(todoTasks.Count == 0)
             {

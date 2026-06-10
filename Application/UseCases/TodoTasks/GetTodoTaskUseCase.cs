@@ -1,5 +1,6 @@
 ﻿using api_csharp.Application.DTOs;
 using api_csharp.Application.Services;
+using api_csharp.Domain.Exception;
 using api_csharp.Domain.Interfaces;
 
 namespace api_csharp.Application.UseCases.TodoTasks
@@ -23,11 +24,12 @@ namespace api_csharp.Application.UseCases.TodoTasks
 
             var data = await _repository.Get(userId, id);
 
-            return new TodoTaskResponseDTO(
-                data.Id,
-                data.Title,
-                data.Description,
-                data.Active
+            return data == null? throw new DomainException("Tarefa não encontrada !"):
+                new TodoTaskResponseDTO(
+                    data.Id,
+                    data.Title,
+                    data.Description,
+                    data.Active
                 );
         }
     }
