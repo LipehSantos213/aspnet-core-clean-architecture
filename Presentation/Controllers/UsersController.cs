@@ -12,17 +12,20 @@ namespace api_csharp.Presentation.Controllers
         private readonly LoginUserUseCase _loginUserUseCase;
         private readonly GetUserUseCase _getUserUseCase;
         private readonly UpdateUserUseCase _updateUserUseCase;
+        private readonly RemoveUserUseCase _removeUserUseCase;
 
         public UsersController(
             CreateUserUseCase createUserUseCase,
             LoginUserUseCase loginUserUseCase,
             GetUserUseCase getUserUseCase,
-            UpdateUserUseCase updateUserUseCase)
+            UpdateUserUseCase updateUserUseCase,
+            RemoveUserUseCase removeUserUseCase)
         {
             _createUserUseCase = createUserUseCase;
             _loginUserUseCase = loginUserUseCase;
             _getUserUseCase = getUserUseCase;
             _updateUserUseCase = updateUserUseCase;
+            _removeUserUseCase = removeUserUseCase;
         }
 
         [HttpPost] // Rota: POST api/users
@@ -53,6 +56,13 @@ namespace api_csharp.Presentation.Controllers
         {
                 var user = await _loginUserUseCase.Execute(dto);
                 return Ok(user);
+        }
+
+        [HttpDelete("{id:int}/logout")]
+        public async Task<IActionResult> Logout([FromRoute] int id)
+        {
+            var response = await _removeUserUseCase.Execute(id);
+            return Ok(new { response });
         }
     }
 }
