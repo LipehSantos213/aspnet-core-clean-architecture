@@ -37,7 +37,7 @@ namespace api_csharp.Infrastructure.Repositories
         {
             await _context.Users.Where(u=> u.Id == user.Id).ExecuteUpdateAsync(s => s
             .SetProperty(u => u.Name, user.Name)
-            .SetProperty(u=> u.Email, user.Email)
+            .SetProperty(u=> u.Email.Address, user.Email.Address)
             );
             return user;
         }
