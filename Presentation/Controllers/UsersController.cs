@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api_csharp.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/users")]
     public class UsersController : ControllerBase
     {
         private readonly CreateUserUseCase _createUserUseCase;
@@ -33,7 +33,7 @@ namespace api_csharp.Presentation.Controllers
                 return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             var user = await _getUserUseCase.Execute(id);
