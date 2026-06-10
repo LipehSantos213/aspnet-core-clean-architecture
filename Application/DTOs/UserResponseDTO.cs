@@ -10,11 +10,18 @@ namespace api_csharp.Application.DTOs
 
         public Email Email { get; set; }
 
+        public string? Token { get; protected set; } = default!;
+
         public UserResponseDTO(int id, string name, Email email)
         {
             Id = id;
             Name = name;
             Email = email;
+        }
+    
+        public void AddToken(string token)
+        {
+            Token = token;
         }
     }
 }
