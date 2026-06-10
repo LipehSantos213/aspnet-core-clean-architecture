@@ -9,23 +9,25 @@ namespace api_csharp.Application.UseCases.TodoTasks
     {
         private readonly ITodoTaskRepository _repository;
         private readonly UserService _userService;
+        private readonly TodoTaskService _todoTaskService;
 
         public GetTodoTaskUseCase(
             ITodoTaskRepository repository,
-            UserService userService)
+            UserService userService,
+            TodoTaskService todoTaskService)
         {
             _repository = repository;
             _userService= userService;
+            _todoTaskService = todoTaskService;
         }
 
         public async Task<TodoTaskResponseDTO> Execute(int userId, int id)
         {
             await _userService.AsyncGetUser(userId);
 
-            var data = await _repository.Get(userId, id);
+            var data = await _todoTaskService.AsyncGetTodoTask(userId, id);
 
-            return data == null? throw new DomainException("Tarefa não encontrada !"):
-                new TodoTaskResponseDTO(
+            return new TodoTaskResponseDTO(
                     data.Id,
                     data.Title,
                     data.Description,
