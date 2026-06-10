@@ -26,10 +26,11 @@ namespace api_csharp.Infrastructure.Data.Mappings
                 .HasDefaultValue(true);
 
             // Configurando a Chave Estrangeira (Relacionamento)
-            builder.HasOne<User>() // Uma tarefa tem um Usuário
-                .WithMany()        // Um usuário tem muitas tarefas
+            builder.HasOne(t=> t.User) // Uma tarefa tem um Usuário
+                .WithMany(u=>u.Tasks)        // Um usuário tem muitas tarefas
                 .HasForeignKey(t => t.UserId) // Chave estrangeira na tabela TodoTasks
-                .OnDelete(DeleteBehavior.Cascade); // Se apagar o usuário, apaga as tarefas dele
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(); // Se apagar o usuário, apaga as tarefas dele
         }
     }
 }
