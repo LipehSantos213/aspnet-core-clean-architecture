@@ -10,10 +10,13 @@ namespace api_csharp.Presentation.Configurations
         {
             // Injeção dos Serviços de Usuario
             services.AddScoped<UserService>();
+            services.AddScoped<TokenService>();
 
             // Injeção dos Use Cases de Usuário
             services.AddScoped<CreateUserUseCase>();
             services.AddScoped<LoginUserUseCase>();
+            services.AddScoped<GetUserUseCase>();
+            services.AddScoped<UpdateUserUseCase>();
 
             // Injeção dos Use Cases de Tarefas
             services.AddScoped<CreateTodoTaskUseCase>();
