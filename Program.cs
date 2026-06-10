@@ -10,19 +10,21 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Pega a Connection String do appsettings.json
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// 2. Conecta o DbContext ao Banco de Dados PostgreSQL
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
 // 3. Mapeia a Interface (Domain) para a Implementação Real (Infrastructure)
 // Sempre que um UseCase pedir IUserRepository, o ASP.NET vai instanciar o UserRepository da Infra
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITodoTaskRepository, TodoTaskRepository>();
 
-var secretKey = builder.Configuration["JwtSettings:SecretKey"]!;
+DotNetEnv.Env.Load();
+
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")!;
+var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+
 var key = Encoding.ASCII.GetBytes(secretKey);
 
 builder.Services.AddAuthentication(options =>
@@ -39,9 +41,9 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidIssuer = issuer,
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        ValidAudience = audience,
         ValidateLifetime = true, // Valida se o token já expirou
         ClockSkew = TimeSpan.Zero // Remove o tempo de tolerância padrão de 5 min para expiração exata
     };

@@ -8,11 +8,9 @@ namespace api_csharp.Application.Services
 {
     public class TokenService
     {
-        private readonly IConfiguration _configuration;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService()
         {
-            _configuration = configuration;
         }
 
         public string GenerateAccessToken(User user, string role)
@@ -20,10 +18,10 @@ namespace api_csharp.Application.Services
             var tokenHandler = new JwtSecurityTokenHandler();
 
             // Lendo os dados na configurações em appsettings.json
-            var secretKey = _configuration["JwtSettings:SecretKey"]!;
-            var issuer = _configuration["JwtSettings:Issuer"];
-            var audience = _configuration["JwtSettings:Audience"];
-            var expiryMinutes = double.Parse(_configuration["JwtSettings:ExpiryInMinutes"]!);
+            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")!;
+            var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+            var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+            var expiryMinutes = double.Parse(Environment.GetEnvironmentVariable("JWT_EXPIRY_MINUTES")!);
 
             var key = Encoding.ASCII.GetBytes(secretKey);
 
