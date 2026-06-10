@@ -1,6 +1,5 @@
 ﻿using api_csharp.Application.DTOs;
 using api_csharp.Application.UseCases.TodoTasks;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api_csharp.Presentation.Controllers
@@ -14,13 +13,15 @@ namespace api_csharp.Presentation.Controllers
         private readonly GetAllTodoTaskUseCase _getAllTodoTaskUseCase;
         private readonly GetTodoTaskUseCase _getTodoTaskUseCase;
         private readonly RemoveTodoTaskUseCase _removeTodoTaskUseCase;
+        private readonly UpdateStatusTodoTaskUseCase _updateStatusTodoTaskUseCase;
 
         public TodoTasksController(
             CreateTodoTaskUseCase createTodoTaskUseCase,
             UpdateTodoTaskUseCase updateTodoTaskUseCase,
             GetAllTodoTaskUseCase getAllTodoTaskUseCase,
             GetTodoTaskUseCase getTodoTaskUseCase,
-            RemoveTodoTaskUseCase removeTodoTaskUseCase
+            RemoveTodoTaskUseCase removeTodoTaskUseCase,
+            UpdateStatusTodoTaskUseCase updateStatusTodoTaskUseCase
             )
         {
             _createTodoTaskUseCase = createTodoTaskUseCase;
@@ -28,6 +29,7 @@ namespace api_csharp.Presentation.Controllers
             _getAllTodoTaskUseCase = getAllTodoTaskUseCase;
             _getTodoTaskUseCase = getTodoTaskUseCase;
             _removeTodoTaskUseCase = removeTodoTaskUseCase;
+            _updateStatusTodoTaskUseCase = updateStatusTodoTaskUseCase;
         }
 
         [HttpPost] // Rota: POST api/users/{userId}/tasks
@@ -44,6 +46,20 @@ namespace api_csharp.Presentation.Controllers
                 return Ok(new { task });
         }
 
+        [HttpPatch("{id:int}/active")]
+        public async Task<IActionResult> Active([FromRoute] int userId, [FromRoute] int id)
+        {
+            var task = await _updateStatusTodoTaskUseCase.Execute(userId, id, true);
+            return Ok(new {task});
+        }
+
+        [HttpPatch("{id:int}/disable")]
+        public async Task<IActionResult> Disable([FromRoute] int userId, [FromRoute] int id)
+        {
+            var task = await _updateStatusTodoTaskUseCase.Execute(userId, id, false);
+            return Ok(new { task });
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] int userId)
         {
@@ -51,7 +67,7 @@ namespace api_csharp.Presentation.Controllers
                 return Ok(new { tasks });
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Get([FromRoute] int userId, [FromRoute] int id)
         {
                 var task = await _getTodoTaskUseCase.Execute(userId, id);
